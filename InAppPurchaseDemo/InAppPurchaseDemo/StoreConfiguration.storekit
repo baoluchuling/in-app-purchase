@@ -1,0 +1,250 @@
+{
+  "identifier" : "B2F3117E",
+  "nonRenewingSubscriptions" : [
+    {
+      "displayPrice" : "99999",
+      "familyShareable" : false,
+      "internalID" : "9F959830",
+      "localizations" : [
+        {
+          "description" : "会员恒久远，一订永流传",
+          "displayName" : "永久会员",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.sub.non.1",
+      "referenceName" : "非续期订阅：永久会员",
+      "type" : "NonRenewingSubscription"
+    },
+    {
+      "displayPrice" : "666",
+      "familyShareable" : false,
+      "internalID" : "57906044",
+      "localizations" : [
+        {
+          "description" : "动漫剧集",
+          "displayName" : "擅长捉弄的高木同学",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.sub.non.2",
+      "referenceName" : "非续期订阅：影视作品",
+      "type" : "NonRenewingSubscription"
+    }
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "CECB7407",
+      "localizations" : [
+        {
+          "description" : "99 砖石",
+          "displayName" : "99 砖石",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.1",
+      "referenceName" : "消耗型：99砖石",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "1C295C4F",
+      "localizations" : [
+        {
+          "description" : "199 砖石",
+          "displayName" : "199 砖石",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.2",
+      "referenceName" : "消耗型：199砖石",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "3.99",
+      "familyShareable" : false,
+      "internalID" : "87FB0658",
+      "localizations" : [
+        {
+          "description" : "399 砖石",
+          "displayName" : "399 砖石",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.3",
+      "referenceName" : "消耗型：399砖石",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "5.99",
+      "familyShareable" : false,
+      "internalID" : "367D9DFC",
+      "localizations" : [
+        {
+          "description" : "599 砖石",
+          "displayName" : "599 砖石",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.4",
+      "referenceName" : "消耗型：599砖石",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "14067895",
+      "localizations" : [
+        {
+          "description" : "999 砖石",
+          "displayName" : "999 砖石",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.5",
+      "referenceName" : "消耗型：999砖石",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "99",
+      "familyShareable" : false,
+      "internalID" : "8ECF0826",
+      "localizations" : [
+        {
+          "description" : "孤独的身影，已离大地",
+          "displayName" : "月光",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.non.1",
+      "referenceName" : "非消耗型：图片",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "1000",
+      "familyShareable" : false,
+      "internalID" : "2532C981",
+      "localizations" : [
+        {
+          "description" : "古代诗集",
+          "displayName" : "诗经",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.non.2",
+      "referenceName" : "非消耗型：电子书",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.3",
+      "familyShareable" : false,
+      "internalID" : "AF395458",
+      "localizations" : [
+        {
+          "description" : "购买第一章书籍",
+          "displayName" : "第一章",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.temporary.id.non.3",
+      "referenceName" : "非消耗型：章节",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_compatibilityTimeRate" : 6,
+    "_failTransactionsEnabled" : false,
+    "_storeKitError" : 0,
+    "_timeRate" : 15
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "DAE03960",
+      "localizations" : [
+
+      ],
+      "name" : "临时会员",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 3,
+          "internalID" : "68383B9B",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "---------",
+              "displayName" : "虚拟内购---连续订阅 “月” 度会员",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.temporary.id.sub.3",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "自动续费：月度会员",
+          "subscriptionGroupID" : "DAE03960",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "displayPrice" : "3.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "45481441",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "=================",
+              "displayName" : "虚拟内购---连续订阅 “季” 度会员",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.temporary.id.sub.2",
+          "recurringSubscriptionPeriod" : "P3M",
+          "referenceName" : "自动续费：季度会员",
+          "subscriptionGroupID" : "DAE03960",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "displayPrice" : "13.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "DEA278B7",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "三三三三三三三三三三三三三三三",
+              "displayName" : "虚拟内购---连续订阅 “年” 度会员",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.temporary.id.sub.1",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "自动续费：年度会员",
+          "subscriptionGroupID" : "DAE03960",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "subscriptionOffersKeyPair" : {
+    "id" : "E7409E9D",
+    "privateKey" : "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg4DGba/0tgqqOlHM4F0PwRWPgBERGdZDK7l4wqjqO9P2gCgYIKoZIzj0DAQehRANCAASlWU14jaJdP9DXykd1qgLMlYB0JauW/k0mFB0Q4CbgmnxjqC2CpRTEj+Ra7kUShqAHMjqXHkaR43x5GdnN5+by"
+  },
+  "version" : {
+    "major" : 1,
+    "minor" : 1
+  }
+}
