@@ -50,6 +50,20 @@ class AllOrderListViewController: UIViewController, UITableViewDelegate, UITable
             let nonpids = data as! [String]
             products += ((try? await Product.products(for: nonpids)) ?? [])
             
+            guard let path = Bundle.main.url(forResource: "non-renewing-subscription", withExtension: "plist"), let data = NSArray.init(contentsOf: path) else {
+                return
+            }
+
+            let subpids = data as! [String]
+            products += ((try? await Product.products(for: subpids)) ?? [])
+            
+            guard let path = Bundle.main.url(forResource: "auto-renewing-subscription", withExtension: "plist"), let data = NSArray.init(contentsOf: path) else {
+                return
+            }
+
+            let autosubpids = data as! [String]
+            products += ((try? await Product.products(for: autosubpids)) ?? [])
+            
             for await verificationResult in Transaction.all {
                 guard case .verified(let transaction) = verificationResult else {
                     continue
@@ -76,12 +90,15 @@ class AllOrderListViewController: UIViewController, UITableViewDelegate, UITable
         let transaction: Transaction = self.transactions[indexPath.row]
         let cell: CustomTableViewCell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
         cell.selectionStyle = .none
+        
+        print(transaction)
+        
         cell.setupData(
             title: "\(products.first(where: { $0.id == transaction.productID })?.displayName ?? "未知")",
             num: "\(transaction.id)",
             price: "\(products.first(where: { $0.id == transaction.productID })?.displayPrice ?? "未知")",
             date: transaction.purchaseDate.ISO8601Format(),
-            isRefund: transaction.revocationDate == nil
+            isRefund: transaction.revocationDate != nil
         )
         
         return cell

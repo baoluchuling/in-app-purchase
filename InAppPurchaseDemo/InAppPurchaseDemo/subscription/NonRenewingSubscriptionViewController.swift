@@ -46,19 +46,34 @@ class NonRenewingSubscriptionViewController: UIViewController {
 
             nonProductIds = data as! [String]
             nonProducts = try await Product.products(for: nonProductIds)
+            
+            alwaysBuyProduct.removeAll()
                         
             for await verificationResult in Transaction.currentEntitlements {
                 guard case .verified(let transaction) = verificationResult else {
                     continue
                 }
                 
-                if transaction.revocationDate == nil {
-                    alwaysBuyProduct.append(transaction.productID)
+                print(transaction)
+                
+                // 订阅已退款
+                if (transaction.revocationDate != nil) {
+                    continue
                 }
+                
+                // 非续订型 不会过期 订阅已过期
+//                if (transaction.expirationDate != nil &&
+//                    transaction.expirationDate!.timeIntervalSince1970 <= Date.now.timeIntervalSince1970) {
+//                    continue
+//                }
+                
+                alwaysBuyProduct.append(transaction.productID)
             }
             
             
             var p: [String] = []
+            
+            buttons.removeAll()
 
             for productIndex in 0..<nonProducts.count {
                 let button = UIButton.init(frame: CGRect(x: 85, y: 120 + 80 * (productIndex + 1), width: 205, height: 48))
@@ -102,8 +117,7 @@ class NonRenewingSubscriptionViewController: UIViewController {
                     
                     await transaction.finish()
                     
-                    alwaysBuyProduct.append(product.id)
-                    buttons[sender.tag].configuration?.baseBackgroundColor = UIColor.orange
+                    getAllProduct()
                     
                     break
                 case .unverified(let transaction, let verificationError):
@@ -111,12 +125,14 @@ class NonRenewingSubscriptionViewController: UIViewController {
                 }
                 break
             case .pending:
-                // The purchase requires action from the customer.
-                // If the transaction completes,
-                // it's available through Transaction.updates.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "购买中断", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             case .userCancelled:
-                // The user canceled the purchase.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "用户取消", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             @unknown default:
                 break

@@ -157,10 +157,10 @@
   "settings" : {
     "_askToBuyEnabled" : false,
     "_billingIssuesEnabled" : false,
-    "_compatibilityTimeRate" : 6,
+    "_compatibilityTimeRate" : 4,
     "_failTransactionsEnabled" : false,
     "_storeKitError" : 0,
-    "_timeRate" : 15
+    "_timeRate" : 11
   },
   "subscriptionGroups" : [
     {
@@ -172,6 +172,9 @@
       "subscriptions" : [
         {
           "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
 
           ],
           "displayPrice" : "0.99",
@@ -196,6 +199,9 @@
           "adHocOffers" : [
 
           ],
+          "codeOffers" : [
+
+          ],
           "displayPrice" : "3.99",
           "familyShareable" : false,
           "groupNumber" : 2,
@@ -218,6 +224,9 @@
           "adHocOffers" : [
 
           ],
+          "codeOffers" : [
+
+          ],
           "displayPrice" : "13.99",
           "familyShareable" : false,
           "groupNumber" : 1,
@@ -237,6 +246,44 @@
           "type" : "RecurringSubscription"
         }
       ]
+    },
+    {
+      "id" : "32013827",
+      "localizations" : [
+
+      ],
+      "name" : "优惠会员",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "3A372958",
+          "introductoryOffer" : {
+            "internalID" : "7470572F",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.temporary.id.sub2.1",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "优惠-自动续费：月度会员",
+          "subscriptionGroupID" : "32013827",
+          "type" : "RecurringSubscription"
+        }
+      ]
     }
   ],
   "subscriptionOffersKeyPair" : {
@@ -244,7 +291,7 @@
     "privateKey" : "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg4DGba/0tgqqOlHM4F0PwRWPgBERGdZDK7l4wqjqO9P2gCgYIKoZIzj0DAQehRANCAASlWU14jaJdP9DXykd1qgLMlYB0JauW/k0mFB0Q4CbgmnxjqC2CpRTEj+Ra7kUShqAHMjqXHkaR43x5GdnN5+by"
   },
   "version" : {
-    "major" : 1,
-    "minor" : 1
+    "major" : 2,
+    "minor" : 0
   }
 }

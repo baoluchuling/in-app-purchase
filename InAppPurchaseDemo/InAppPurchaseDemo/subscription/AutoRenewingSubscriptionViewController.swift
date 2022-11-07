@@ -21,6 +21,20 @@ class AutoRenewingSubscriptionViewController: UIViewController {
         self.textLabel.textColor = UIColor.systemBlue
         self.view.addSubview(self.textLabel)
         
+        let button = UIButton.init(frame: CGRect(x: 100, y: 80 + 50, width: 100, height: 48))
+        
+        var consCon = UIButton.Configuration.filled()
+        consCon.contentInsets = NSDirectionalEdgeInsets.zero
+        consCon.baseForegroundColor = UIColor.white
+        consCon.baseBackgroundColor = UIColor.blue
+        consCon.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
+        consCon.buttonSize = .medium
+        button.configuration = consCon
+        button.setTitle("退款", for: .normal)
+        button.addTarget(self, action: #selector(onRefund(sender:)), for: .touchUpInside)
+        
+        self.view.addSubview(button)
+        
         getAllProduct()
     }
     
@@ -33,7 +47,7 @@ class AutoRenewingSubscriptionViewController: UIViewController {
     
     
     var products: [Product] = []
-    var alwaysBuyProduct: [String] = []
+    var alwaysBuyProduct: [Transaction] = []
 
     var buttons: [UIButton] = []
     
@@ -47,16 +61,28 @@ class AutoRenewingSubscriptionViewController: UIViewController {
 
             nonProductIds = data as! [String]
             products = try await Product.products(for: nonProductIds)
+            
+            alwaysBuyProduct.removeAll()
                         
             for await verificationResult in Transaction.currentEntitlements {
                 guard case .verified(let transaction) = verificationResult else {
                     continue
                 }
-                            
-                if transaction.revocationDate == nil && !transaction.isUpgraded {
-                    alwaysBuyProduct.append(transaction.productID)
+                
+                // 订阅已退款
+                if (transaction.revocationDate != nil) {
+                    continue
                 }
+                
+                // 订阅已过期
+                if (transaction.expirationDate != nil && transaction.expirationDate!.timeIntervalSince1970 <= Date.now.timeIntervalSince1970) {
+                    continue
+                }
+                            
+                alwaysBuyProduct.append(transaction)
             }
+            
+            buttons.removeAll()
             
             for productIndex in 0..<products.count {
                 let button = UIButton.init(frame: CGRect(x: 35, y: 120 + 80 * (productIndex + 1), width: 300, height: 48))
@@ -65,7 +91,9 @@ class AutoRenewingSubscriptionViewController: UIViewController {
                 var consCon = UIButton.Configuration.filled()
                 consCon.contentInsets = NSDirectionalEdgeInsets.zero
                 consCon.baseForegroundColor = UIColor.white
-                if (alwaysBuyProduct.contains(product.id)) {
+                if (alwaysBuyProduct.contains(where: { transaction in
+                    transaction.productID == product.id
+                })) {
                     consCon.baseBackgroundColor = UIColor.orange
                 } else {
                     consCon.baseBackgroundColor = UIColor.red
@@ -92,6 +120,10 @@ class AutoRenewingSubscriptionViewController: UIViewController {
             
             print(product.subscription)
             
+            // 对于有效期内的订阅再次购买，返回的是当前有效期内的商品transaction
+            // 对于过期的商品订阅再次购买，返回的是新的商品transaction
+            // 可以简单理解为，同一个一个订阅周期内相同商品只会有唯一一个transaction id
+            
             let result = try await product.purchase()
             
             switch result {
@@ -100,13 +132,10 @@ class AutoRenewingSubscriptionViewController: UIViewController {
                 case .verified(let transaction):
                     
                     print(transaction)
-
+                    
                     await transaction.finish()
                     
-                    alwaysBuyProduct.append(product.id)
-                    sender.configuration?.baseBackgroundColor = UIColor.orange
-
-                    updatePurshaseInfo()
+                    getAllProduct()
                                         
                     break
                 case .unverified(let transaction, let verificationError):
@@ -114,12 +143,14 @@ class AutoRenewingSubscriptionViewController: UIViewController {
                 }
                 break
             case .pending:
-                // The purchase requires action from the customer.
-                // If the transaction completes,
-                // it's available through Transaction.updates.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "购买中断", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             case .userCancelled:
-                // The user canceled the purchase.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "用户取消", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             @unknown default:
                 break
@@ -131,10 +162,21 @@ class AutoRenewingSubscriptionViewController: UIViewController {
         var p: [String] = []
 
         for product in products {
-            if (alwaysBuyProduct.contains(product.id)) {
+            if (alwaysBuyProduct.contains(where: { transaction in
+                transaction.productID == product.id
+            })) {
                 p.append(product.displayName)
             }
         }
         self.textLabel.text = "已购内容：\n\(p.isEmpty ? "无" : p.joined(separator: "、"))";
+    }
+    
+    @objc func onRefund(sender: UIButton) {
+        Task {
+            
+            let status = await try? alwaysBuyProduct.first?.beginRefundRequest(in: view.window!.windowScene!)
+            
+            print(status)
+        }
     }
 }

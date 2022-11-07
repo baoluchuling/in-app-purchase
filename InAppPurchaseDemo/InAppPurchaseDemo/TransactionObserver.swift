@@ -54,17 +54,19 @@ final class TransactionObserver {
             
             if transaction.revocationDate != nil {
                 // 　退款
-                
+                print("退款")
+                continue
             } else if let expirationDate = transaction.expirationDate,
-                expirationDate < Date() {
+                      expirationDate <= Date.now {
                 // 订阅过期
                 await processUnfinishedOrder()
+                print("过期")
                 continue
             } else if transaction.isUpgraded {
-                
+                print("升级")
                 continue
             } else {
-
+                print("升级\(transaction.debugDescription)")
             }
         }
     }

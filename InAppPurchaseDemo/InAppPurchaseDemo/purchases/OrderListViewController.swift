@@ -32,12 +32,44 @@ class OrderListViewController: UIViewController, UITableViewDelegate, UITableVie
         self.view.addSubview(self.tableview!)
         
         Task {
+            
             guard let path = Bundle.main.url(forResource: "consumable", withExtension: "plist"), let data = NSDictionary.init(contentsOf: path) else {
                 return
             }
+
+            let pids = Array((data as! [String:Int]).keys)
+            products = (try? await Product.products(for: pids)) ?? []
             
-            let productIdentifiers = Array((data as! [String:Int]).keys)
-            products = try await Product.products(for: productIdentifiers)
+            guard let path = Bundle.main.url(forResource: "non-consumable", withExtension: "plist"), let data = NSArray.init(contentsOf: path) else {
+                return
+            }
+
+            let nonpids = data as! [String]
+            products += ((try? await Product.products(for: nonpids)) ?? [])
+            
+            guard let path = Bundle.main.url(forResource: "non-renewing-subscription", withExtension: "plist"), let data = NSArray.init(contentsOf: path) else {
+                return
+            }
+
+            let subpids = data as! [String]
+            products += ((try? await Product.products(for: subpids)) ?? [])
+            
+            guard let path = Bundle.main.url(forResource: "auto-renewing-subscription", withExtension: "plist"), let data = NSArray.init(contentsOf: path) else {
+                return
+            }
+
+            let autosubpids = data as! [String]
+            products += ((try? await Product.products(for: autosubpids)) ?? [])
+            
+            for await verificationResult in Transaction.unfinished {
+                guard case .verified(let transaction) = verificationResult else {
+                    continue
+                }
+                
+                print(transaction)
+                
+                self.transactions.append(transaction)
+            }
             
             self.tableview?.reloadData()
         }
@@ -62,7 +94,7 @@ class OrderListViewController: UIViewController, UITableViewDelegate, UITableVie
             num: "\(transaction.id)",
             price: "\(products.first(where: { $0.id == transaction.productID })?.displayPrice ?? "未知")",
             date: transaction.purchaseDate.ISO8601Format(),
-            isRefund: transaction.revocationDate == nil
+            isRefund: transaction.revocationDate != nil
         )
         
         return cell
@@ -91,7 +123,7 @@ class CustomTableViewCell: UITableViewCell {
     func setupView() {
         self.contentView.subviews.forEach { $0.removeFromSuperview() }
 
-        self.titleLabel = UILabel(frame: CGRect(x: 20, y: 10, width: 100, height: 30))
+        self.titleLabel = UILabel(frame: CGRect(x: 20, y: 10, width: 200, height: 30))
         self.titleLabel?.backgroundColor = UIColor.white
         self.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         self.titleLabel?.textColor = UIColor.black
@@ -127,12 +159,12 @@ class CustomTableViewCell: UITableViewCell {
         self.numLabel?.text = num
         self.dateLabel?.text = date
         
-        if !isRefund {
+        if isRefund {
             self.priceLabel?.text = "+\(price ?? "")"
-            self.priceLabel?.textColor = UIColor.systemGreen
+            self.priceLabel?.textColor = UIColor.systemRed
         } else {
             self.priceLabel?.text = "-\(price ?? "")"
-            self.priceLabel?.textColor = UIColor.systemRed
+            self.priceLabel?.textColor = UIColor.systemGreen
         }
     }
 }

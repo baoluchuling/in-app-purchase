@@ -135,10 +135,6 @@ class ConsumableViewController: UIViewController {
                     }
                     break
                 case .pending:
-                    // The purchase requires action from the customer.
-                    // If the transaction completes,
-                    // it's available through Transaction.updates.
-                    
                     let alert: UIAlertController = UIAlertController(title: "内购", message: "购买中断", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
                     self.present(alert, animated: true)

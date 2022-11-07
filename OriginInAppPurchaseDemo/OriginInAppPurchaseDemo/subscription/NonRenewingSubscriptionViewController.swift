@@ -27,15 +27,10 @@ class NonRenewingSubscriptionViewController: UIViewController {
     var textLabel: UILabel = UILabel()
     
     var nonProductIds: [String] = []
-    
-    var blockCount: Int = 0
-    
-    
-    var nonProducts: [Product] = []
+    var nonProducts: [SKProduct] = []
     var alwaysBuyProduct: [String] = []
 
     var buttons: [UIButton] = []
-    
     
     func getAllProduct() {
         
@@ -45,83 +40,61 @@ class NonRenewingSubscriptionViewController: UIViewController {
             }
 
             nonProductIds = data as! [String]
-            nonProducts = try await Product.products(for: nonProductIds)
-                        
-            for await verificationResult in Transaction.currentEntitlements {
-                guard case .verified(let transaction) = verificationResult else {
-                    continue
+            
+            let _ = StoreObserver.default.request(products: Set(nonProductIds)) { [self] res in
+                nonProducts = res
+                
+                var p: [String] = []
+                for productIndex in 0..<nonProducts.count {
+                    let button = UIButton.init(frame: CGRect(x: 35, y: 120 + 80 * (productIndex + 1), width: 300, height: 48))
+                    
+                    let product: SKProduct = nonProducts[productIndex]
+                    var consCon = UIButton.Configuration.filled()
+                    consCon.contentInsets = NSDirectionalEdgeInsets.zero
+                    consCon.baseForegroundColor = UIColor.white
+                    if (alwaysBuyProduct.contains(product.productIdentifier)) {
+                        p.append(product.localizedTitle)
+                        consCon.baseBackgroundColor = UIColor.orange
+                    } else {
+                        consCon.baseBackgroundColor = UIColor.red
+                    }
+                    consCon.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
+                    consCon.buttonSize = .medium
+                    button.configuration = consCon
+                    button.tag = productIndex
+                    button.setTitle(product.localizedTitle, for: .normal)
+                    button.addTarget(self, action: #selector(onClick(sender:)), for: .touchUpInside)
+                    
+                    self.view.addSubview(button)
+                    
+                    buttons.append(button)
                 }
                 
-                if transaction.revocationDate == nil {
-                    alwaysBuyProduct.append(transaction.productID)
-                }
+                self.textLabel.text = "已购内容：\(p.isEmpty ? "无" : p.joined(separator: "、"))";
             }
-            
-            
-            var p: [String] = []
-
-            for productIndex in 0..<nonProducts.count {
-                let button = UIButton.init(frame: CGRect(x: 85, y: 120 + 80 * (productIndex + 1), width: 205, height: 48))
-                
-                let product: Product = nonProducts[productIndex]
-                var consCon = UIButton.Configuration.filled()
-                consCon.contentInsets = NSDirectionalEdgeInsets.zero
-                consCon.baseForegroundColor = UIColor.white
-                if (alwaysBuyProduct.contains(product.id)) {
-                    p.append(product.displayName)
-                    consCon.baseBackgroundColor = UIColor.orange
-                } else {
-                    consCon.baseBackgroundColor = UIColor.red
-                }
-                consCon.buttonSize = .medium
-                button.configuration = consCon
-                button.tag = productIndex
-                button.setTitle(product.displayName, for: .normal)
-                button.addTarget(self, action: #selector(onClick(sender:)), for: .touchUpInside)
-                
-                self.view.addSubview(button)
-                
-                buttons.append(button)
-            }
-            
-            self.textLabel.text = "已购内容：\(p.isEmpty ? "无" : p.joined(separator: "、"))";
         }
     }
     
     @objc func onClick(sender: UIButton) {
         Task {
-            let product: Product = nonProducts[sender.tag]
+            let product: SKProduct = nonProducts[sender.tag]
             
-            
-            let result = try await product.purchase()
-            
-            switch result {
-            case .success(let verificationResult):
-                switch verificationResult {
-                case .verified(let transaction):
-                    
-                    await transaction.finish()
-                    
-                    alwaysBuyProduct.append(product.id)
-                    buttons[sender.tag].configuration?.baseBackgroundColor = UIColor.orange
-                    
-                    break
-                case .unverified(let transaction, let verificationError):
-                    break
-                }
-                break
-            case .pending:
-                // The purchase requires action from the customer.
-                // If the transaction completes,
-                // it's available through Transaction.updates.
-                break
-            case .userCancelled:
-                // The user canceled the purchase.
-                break
-            @unknown default:
-                break
+            let _ = StoreObserver.default.pay(product: product) { [self] in
+                alwaysBuyProduct.append(product.productIdentifier)
+                updatePurshaseInfo()
+                sender.configuration?.baseBackgroundColor = UIColor.orange
             }
-
         }
+    }
+    
+    func updatePurshaseInfo() {
+        var p: [String] = []
+
+        for product in nonProducts {
+            if (alwaysBuyProduct.contains(product.productIdentifier)) {
+                p.append(product.localizedTitle)
+            }
+        }
+        self.textLabel.text = "已购内容：\n\(p.isEmpty ? "无" : p.joined(separator: "、"))";
     }
 }

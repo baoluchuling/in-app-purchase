@@ -120,24 +120,23 @@ class NonConsumableViewController: UIViewController {
                 switch verificationResult {
                 case .verified(let transaction):
                     
-//                    await transaction.finish()
-//
-//                    alwaysBuyProduct.append(product.id)
-//                    buttons[sender.tag].configuration?.baseBackgroundColor = UIColor.orange
-//                    updatePurshaseInfo()
-//
+                    await transaction.finish()
+                    getAllProduct()
+
                     break
                 case .unverified(let transaction, let verificationError):
                     break
                 }
                 break
             case .pending:
-                // The purchase requires action from the customer.
-                // If the transaction completes,
-                // it's available through Transaction.updates.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "购买中断", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             case .userCancelled:
-                // The user canceled the purchase.
+                let alert: UIAlertController = UIAlertController(title: "内购", message: "用户取消", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: "Default action"), style: .default))
+                self.present(alert, animated: true)
                 break
             @unknown default:
                 break
