@@ -115,13 +115,20 @@ class ConsumableViewController: UIViewController {
             
             let product: Product = products[sender.tag]
             
+            print(product)
+            
             do {
-                let result: Product.PurchaseResult = try await product.purchase()
+                
+                let options = Product.PurchaseOption.appAccountToken(UUID(uuidString: "123e4567-e89b-12d3-a456-426655440000")!)
+                
+                let result: Product.PurchaseResult = try await product.purchase(options: [options])
                 
                 switch result {
                 case .success(let verificationResult):
                     switch verificationResult {
                     case .verified(let transaction):
+                        
+                        print(transaction)
                     
                         await transaction.finish()
                         

@@ -120,6 +120,8 @@ class NonConsumableViewController: UIViewController {
                 switch verificationResult {
                 case .verified(let transaction):
                     
+                    print(transaction)
+
                     await transaction.finish()
                     getAllProduct()
 

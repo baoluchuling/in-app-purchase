@@ -107,6 +107,7 @@ class NonRenewingSubscriptionViewController: UIViewController {
         Task {
             let product: Product = nonProducts[sender.tag]
             
+            print(product)
             
             let result = try await product.purchase()
             
@@ -115,6 +116,8 @@ class NonRenewingSubscriptionViewController: UIViewController {
                 switch verificationResult {
                 case .verified(let transaction):
                     
+                    print(transaction)
+
                     await transaction.finish()
                     
                     getAllProduct()

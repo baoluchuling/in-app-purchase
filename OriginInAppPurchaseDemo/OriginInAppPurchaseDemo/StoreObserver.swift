@@ -50,6 +50,7 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
                 case .purchasing:
                     break;
                 case .purchased:
+                    print(transaction)
                     let id = String(transaction.payment.hash)
                     SKPaymentQueue.default().finishTransaction(transaction)
                     
@@ -100,8 +101,11 @@ class StoreObserver: NSObject, SKPaymentTransactionObserver, SKProductsRequestDe
     }
     
     func pay(product: SKProduct, closure: @escaping () -> Void) -> String {
+        
+        print(product.localizedDescription)
+        
         let payment = SKMutablePayment(product: product)
-        payment.quantity = 2
+        payment.quantity = 1
         
         paymentHandler.append(PaymentHandler(identifier: String(payment.hash), closure: closure))
         

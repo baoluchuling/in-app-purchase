@@ -56,37 +56,33 @@ class NonConsumableViewController: UIViewController {
             }
 
             productIds = data as! [String]
-            
-            StoreObserver.default.alwaysBuy()
-            
-//            let _ = StoreObserver.default.request(products: Set(productIds)) { [self] res in
-//                products = res
-//
-//                for productIndex in 0..<products.count {
-//                    let button = UIButton.init(frame: CGRect(x: 100, y: 120 + 80 * (productIndex + 1), width: 100, height: 48))
-//
-//                    let product: SKProduct = products[productIndex]
-//                    var consCon = UIButton.Configuration.filled()
-//                    consCon.contentInsets = NSDirectionalEdgeInsets.zero
-//                    consCon.baseForegroundColor = UIColor.white
-//                    if (alwaysBuyProduct.contains(product.productIdentifier)) {
-//                        consCon.baseBackgroundColor = UIColor.orange
-//                    } else {
-//                        consCon.baseBackgroundColor = UIColor.red
-//                    }
-//                    consCon.buttonSize = .medium
-//                    button.configuration = consCon
-//                    button.tag = productIndex
-//                    button.setTitle(product.localizedTitle, for: .normal)
-//                    button.addTarget(self, action: #selector(onClick(sender:)), for: .touchUpInside)
-//
-//                    self.view.addSubview(button)
-//
-//                    buttons.append(button)
-//                }
-//            }
-            
-            
+                        
+            let _ = StoreObserver.default.request(products: Set(productIds)) { [self] res in
+                products = res
+
+                for productIndex in 0..<products.count {
+                    let button = UIButton.init(frame: CGRect(x: 100, y: 120 + 80 * (productIndex + 1), width: 100, height: 48))
+
+                    let product: SKProduct = products[productIndex]
+                    var consCon = UIButton.Configuration.filled()
+                    consCon.contentInsets = NSDirectionalEdgeInsets.zero
+                    consCon.baseForegroundColor = UIColor.white
+                    if (alwaysBuyProduct.contains(product.productIdentifier)) {
+                        consCon.baseBackgroundColor = UIColor.orange
+                    } else {
+                        consCon.baseBackgroundColor = UIColor.red
+                    }
+                    consCon.buttonSize = .medium
+                    button.configuration = consCon
+                    button.tag = productIndex
+                    button.setTitle(product.localizedTitle, for: .normal)
+                    button.addTarget(self, action: #selector(onClick(sender:)), for: .touchUpInside)
+
+                    self.view.addSubview(button)
+
+                    buttons.append(button)
+                }
+            }
             
             updatePurshaseInfo()
         }

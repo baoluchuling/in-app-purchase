@@ -118,7 +118,11 @@ class AutoRenewingSubscriptionViewController: UIViewController {
         Task {
             let product: Product = products[sender.tag]
             
-            print(product.subscription)
+            let isEligible = await product.subscription?.isEligibleForIntroOffer
+            
+//            Product.SubscriptionInfo.isEligibleForIntroOffer(for: product.)
+            
+            print(product)
             
             // 对于有效期内的订阅再次购买，返回的是当前有效期内的商品transaction
             // 对于过期的商品订阅再次购买，返回的是新的商品transaction
